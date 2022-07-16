@@ -20,6 +20,40 @@
 
 namespace eve::algo
 {
+  //================================================================================================
+  //! @addtogroup algorithms
+  //! @{
+  //!  @var reduce
+  //!
+  //!  @brief SIMD version of std::reduce
+  //!     * default unrolling is 4
+  //!     * alignes
+  //!
+  //!  Due to the nature of how simd algorithms work we need a zero for the operation,
+  //!  so instead of plus you pass {op, zero} where zero is identity for the op.
+  //!  Instead of zero it can be benefitial to pass eve's constants like `eve::zero`, `eve::one`
+  //!  because we sometimes have a better implementation.
+  //!
+  //!  Unfortunatly passing eve's constants instead of init is not supported at the moment.
+  //!
+  //!  NOTE: the interface differs from the standard because we wanted to match our transform_reduce.
+  //!
+  //!  NOTE: compiler can autovectoize reductions, especially with special options.
+  //!        Maybe you don't need a library implementation.
+  //!
+  //!  Interface:
+  //!
+  //!   reduce(range, pair{op, zero}, init) -> decltype(init);
+  //!   reduce(range, init) -> decltype(init);  - default operation is {eve::add, eve::zero}
+  //!
+  //!  **Required header:** `#include <eve/algo/reduce.hpp>`
+  //!
+  //! #### Example
+  //!
+  //! @godbolt{doc/algo/reduce.cpp}
+  //!
+  //! }@
+  //================================================================================================
   template <typename TraitsSupport>
   struct reduce_ : TraitsSupport
   {
